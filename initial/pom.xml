@@ -17,6 +17,8 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<swagger.codegen.version>3.0.21</swagger.codegen.version>
+		<swagger.yaml.file>swagger.yaml</swagger.yaml.file>
 	</properties>
 
 	<dependencies>
@@ -39,7 +41,17 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.2.32</version>
+			<version>1.4.7</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.codegen.v3</groupId>
+			<artifactId>swagger-codegen-maven-plugin</artifactId>
+			<version>3.0.21</version>
 		</dependency>
 	</dependencies>
 
@@ -48,6 +60,36 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.swagger.codegen.v3</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>${swagger.codegen.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${swagger.yaml.file}</inputSpec>
+							<language>spring</language>
+							<configOptions>
+								<sourceFolder>${swagger.generated.sourcepath}</sourceFolder>
+								<!-- <interfaceOnly>true</interfaceOnly> -->
+								<dateLibrary>java8</dateLibrary>
+							</configOptions>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=Instant</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+							</importMappings>
+							<modelPackage>${project.groupId}.${project.artifactId}.swagger.model</modelPackage>
+							<apiPackage>${project.groupId}.${project.artifactId}.swagger.api</apiPackage>
+							<invokerPackage>${project.groupId}.${project.artifactId}.swagger.invoker</invokerPackage>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
